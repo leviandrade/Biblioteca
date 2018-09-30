@@ -1,0 +1,27 @@
+﻿@model  Biblioteca.Models.Autores
+
+@{
+    ViewBag.Title = "Editar";
+}
+<form action="@Url.Action("Salvar")" method="post" class="w3-container w3-card-4">
+
+    <input type="hidden" name="id" value="@Model.id" />
+
+    <p>
+        <label>Nome:</label>
+        <input class="w3-input" type="text" name="Nome" value="@Model.Nome" />
+    </p>
+
+    <p>
+        <label>Sobrenome:</label>
+        <input class="w3-input" type="text" name="Sobrenome" value="@Model.Sobrenome" />
+    </p>
+
+    <p>
+        <label>Data Nascimento:</label>
+        <input class="w3-input" type="date" name="DataNascimento" value="@Model.DataNascimento" />
+    </p>
+    <input type="submit" value="Enviar" class="w3-button w3-section w3-teal w3-ripple" />
+
+</form>
+

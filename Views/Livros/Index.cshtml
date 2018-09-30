@@ -1,0 +1,192 @@
+﻿@{
+    ViewBag.Title = "Livros";
+}
+
+@section Head
+{
+    <script type="text/javascript">
+
+        function incluir() {
+            limparModal();
+            toggleModal();
+        }
+
+        function excluir(a) {
+            event.preventDefault();
+            var endereco = $(a).attr("href");
+
+            $.post(endereco, {})
+                .done(function (data) {
+
+                    if (data.Sucesso)
+                        abrirGrid();
+
+                });
+        }
+
+        function editar(a) {
+            event.preventDefault();
+
+            var endereco = $(a).attr("href");
+
+            $.post(endereco, {})
+                .done(function (data) {
+
+                    limparModal();
+
+                    var container = $("#formLivros");
+
+                    $.each(data, function(nome, valor){
+                        container.find("[name=" + nome + "]").val(valor);
+                    });
+
+                    toggleModal();
+
+                });
+        }
+
+        function toggleModal() {
+            event.preventDefault();
+            $("#idModal").fadeToggle(500);
+        }
+
+        function limparModal() {
+            $("#idModal input, #idModal select, #idModal textarea")
+                .not("input[type=submit], input[type=button]")
+                .val("");
+        }
+
+        function abrirGrid() {
+
+            var editar = '@Url.Action("Editar")';
+            var excluir = '@Url.Action("Excluir")';
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Lista")',
+                data: {},
+                success: function (data) {
+
+                    var container = $("#ListaLivros tbody");
+                    container.find("tr").not(".Modelo").remove();
+
+                    var modelo = container.find(".Modelo");
+
+                    $.each(data, function (i, item) {
+
+                        var linha = modelo.clone();
+
+
+                        $.each(item, function (nome, valor) {
+                            linha.find(".p" + nome).html(valor);
+                        });
+
+//                        linha.find(".pId").html(item.id);
+//                        linha.find(".pNome").html(item.Nome);
+//                        linha.find(".pEndereco").html(item.Endereco);
+                        linha.find(".fa-pencil").attr("href", editar + '/' + item.id);
+                        linha.find(".fa-remove").attr("href", excluir + '/' + item.id);
+
+                        linha.removeClass("Modelo").appendTo(container);
+                    });
+                }
+            });
+        }
+
+        function Salvar() {
+            event.preventDefault();
+            var form = $("#formLivros");
+
+            var endereco = form.attr("action");
+            var postData = form.serialize();
+
+            $.post(endereco, postData)
+                .done(function (data) {
+
+                    if (data.Sucesso) {
+                        abrirGrid();
+                        toggleModal();
+                    }
+                });
+        }
+
+        $(window).load(function () {
+            abrirGrid();
+        });
+    </script>
+}
+
+<table class="w3-table w3-bordered w3-striped" id="ListaLivros">
+    <thead>
+        <tr class="w3-green">
+            <td><a href="@Url.Action("Editar")" class="fa fa-plus" onclick="incluir();"></a></td>
+            <td>id</td>
+            <td>Nome</td>
+            <td>ISBN</td>
+            <td>Data Publicação</td>
+            <td>Preço</td>
+            <td>id Editora</td>
+            <td>id Autor</td>
+        </tr>
+    </thead>
+
+    <p></p>
+
+    <tbody>
+        <tr class="Modelo">
+            <td>
+                <a href="@Url.Action("Editar")" onclick="editar(this);" class="fa fa-pencil"></a>
+                <a href="@Url.Action("Excluir")" onclick="excluir(this);" class="fa fa-remove"></a>
+            </td>
+            <td><span class="pid"></span></td>
+            <td><span class="pNome"></span></td>
+            <td><span class="pISBN"></span></td>
+            <td><span class="pDataPublicacao"></span></td>
+            <td><span class="pPreco"></span></td>
+            <td><span class="pidEditora"></span></td>
+            <td><span class="pidAutor"></span></td>
+
+        </tr>
+    </tbody>
+</table>
+
+<div id="idModal" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container w3-card-4">
+            <form action="@Url.Action("Salvar")" method="post" id="formLivros">
+
+                <input type="hidden" name="id" value="" />
+
+                <p>
+                    <label>Nome:</label>
+                    <input class="w3-input" type="text" name="Nome" value="" />
+                </p>
+                <p>
+                    <label>ISBN:</label>
+                    <input class="w3-input" type="text" name="ISBN" value="" />
+                </p>
+                <p>
+                    <label>Data Publicação:</label>
+                    <input class="w3-input" type="date" name="DataPublicacao" value="" />
+                </p>
+                <p>
+                    <label>Preco:</label>
+                    <input class="w3-input" type="number" step="0.01" name="Preco" value="" />
+                </p>
+                <p>
+                    <label>id Editora:</label>
+                    <input class="w3-input" type="number" name="idEditora" value="" />
+                </p>
+                <p>
+                    <label>id Livro:</label>
+                    <input class="w3-input" type="number" name="idAutor" value="" />
+                </p>
+
+                <button class="w3-button w3-section w3-teal w3-ripple" onclick="Salvar();">Enviar</button>
+                <button class="w3-button w3-section w3-teal w3-ripple" onclick="toggleModal();">Fechar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
