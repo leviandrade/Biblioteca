@@ -101,7 +101,7 @@ namespace Biblioteca.Controllers
 
         public List<Models.Usuarios> ListaUsuarios()
         {
-            string stringConexao = @"Data Source=DESKTOP-DL249A7\SQLSERVER14;Initial Catalog=Biblioteca;user Id=sa;Password=24052716";
+            string stringConexao = @"Data Source=den1.mssql1.gear.host;Initial Catalog=Biblioteca;user Id=biblioteca4;Password=Ga6g!w8m88_L	";
             string sql = "Select id,Nome,Senha From Usuarios";
             List<Models.Usuarios> lista = new List<Models.Usuarios>();
             using (var conn = new SqlConnection(stringConexao))
