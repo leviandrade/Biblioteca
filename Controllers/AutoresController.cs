@@ -143,7 +143,7 @@ namespace Biblioteca.Controllers
         private List<Models.Autores> CriarListaAutores()
         {
             //var lista = Session["Empregados"] as List<Models.Empregados>;
-            string stringConexao = @"Data Source=DESKTOP-DL249A7\SQLSERVER14;Initial Catalog=Biblioteca;user Id=sa;Password=24052716";
+            string stringConexao = @"@"Data Source=den1.mssql1.gear.host;Initial Catalog=biblioteca4;user Id=biblioteca4;Password=Ga6g!w8m88_L";
             string sql = "Select id,Nome,Sobrenome,DataNascimento From Autores";
             List<Models.Autores> lista = new List<Models.Autores>();
             using (var conn = new SqlConnection(stringConexao))
